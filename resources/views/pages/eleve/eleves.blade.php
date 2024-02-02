@@ -1,3 +1,7 @@
+@php
+    use Illuminate\Support\Facades\Request;
+@endphp
+
 @extends('app')
 @section('content')
 <div id="app">
@@ -53,6 +57,8 @@
                             @endforeach
                         </tbody>
                     </table>
+
+                    {!! $getEleves->appends(Request::except('page'))->links() !!}
                 </div>
             </div>
         </div>

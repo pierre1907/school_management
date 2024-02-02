@@ -36,6 +36,6 @@ class Eleve extends Model
         return self::select('eleves.*')
                 ->where('is_delete', '=', 0)
                 ->orderBy('id')
-                ->get();
+                ->paginate(10);
     }
 }
