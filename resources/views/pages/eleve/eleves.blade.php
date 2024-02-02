@@ -31,7 +31,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($eleves as $eleve)
+                            @foreach($getEleves as $eleve)
                             <tr>
                                 <td class="py-1">
                                     <img src="{{ asset($eleve->photo) }}" alt="image">
@@ -44,7 +44,9 @@
                                 <td>
                                     <!-- Action Edit -->
                                     <a href="{{ route('edit_eleve', ['id' => $eleve->id]) }}" class="btn btn-warning btn-sm"><i class="mdi mdi-pencil"></i></a>
-                                    <a href="{{ route('liste_eleves') }}"  class="btn btn-danger btn-sm" onclick="confirmDelete('{{ route('eleve_delete', ['id' => $eleve->id]) }}')"><i class="mdi mdi-delete"></i></a>
+                                    {{-- <a href="{{ route('liste_eleves') }}"  class="btn btn-danger btn-sm" onclick="confirmDelete('{{ route('eleve_delete', ['id' => $eleve->id]) }}')"><i class="mdi mdi-delete"></i></a> --}}
+                                    <a href="{{ route('eleve_delete', ['id' => $eleve->id]) }}" class="btn btn-danger btn-sm"><i class="mdi mdi-delete"></i></a>
+
                                 </td>
                             </tr>
                             @endforeach

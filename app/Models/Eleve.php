@@ -21,5 +21,21 @@ class Eleve extends Model
         'niveau',
         'photo',
         'user_type',
+        'is_delete'
     ];
+
+
+
+    static function getEleve($id)
+    {
+        return Eleve::find($id);
+    }
+
+    static public function getEleves()
+    {
+        return self::select('eleves.*')
+                ->where('is_delete', '=', 0)
+                ->orderBy('id')
+                ->get();
+    }
 }

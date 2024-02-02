@@ -12,10 +12,11 @@ class EleveController extends Controller
 
     public function liste_eleves()
     {
+        $getEleves = Eleve::getEleves();
         $header_title = "Liste des élèves";
-        $eleves = Eleve::all();
+        //$eleves = Eleve::all();
 
-        return view('pages.eleve.eleves', ['header_title' => $header_title, 'eleves' => $eleves]);
+        return view('pages.eleve.eleves', ['header_title' => $header_title, 'getEleves' => $getEleves]);
     }
 
     public function ajoutElevesForm()
@@ -36,6 +37,7 @@ class EleveController extends Controller
             $eleve->nationalite = trim($request->nationalite);
             $eleve->niveau = trim($request->niveau);
             $eleve->user_type = "eleve";
+            $eleve->is_deleted = 0;
             if ($request->hasFile('photo')) {
                 $imagePath = $request->file('photo')->store('photos', 'public');
                 $eleve->photo = 'public/storage/' . $imagePath;
@@ -62,24 +64,20 @@ class EleveController extends Controller
     public function modifier(Request $request, $id)
     {
         try {
-            // Trouver l'élève à mettre à jour
-            $eleve = Eleve::find($id);
+             $eleve = Eleve::find($id);
 
-            // Vérifier si l'élève existe
-            if (!$eleve) {
+             if (!$eleve) {
                 return redirect()->back()->withInput()->withErrors(['error' => 'Élève non trouvé']);
             }
 
-            // Mettre à jour les propriétés de l'élève
-            $eleve->nomComplet = trim($request->nomComplet);
+             $eleve->nomComplet = trim($request->nomComplet);
             $eleve->genre = trim($request->genre);
             $eleve->date_naissance = trim($request->date_naissance);
             $eleve->lieu_naissance = trim($request->lieu_naissance);
             $eleve->nationalite = trim($request->nationalite);
             $eleve->niveau = trim($request->niveau);
 
-            // Mettre à jour la photo si une nouvelle photo est fournie
-            if ($request->hasFile('photo')) {
+             if ($request->hasFile('photo')) {
                 $imagePath = $request->file('photo')->store('photos', 'public');
                 $eleve->photo = 'public/storage/' . $imagePath;
             }
@@ -98,11 +96,12 @@ class EleveController extends Controller
     public function delete($id)
     {
         try {
-            // Trouver l'élève par son ID
-            $eleve = Eleve::findOrFail($id);
+            $eleve = Eleve::getSingle($id);
+            $eleve->is_delete = 1;
+            $eleve->save();
 
             // Supprimer l'élève
-            $eleve->delete();
+            //$eleve->delete();
 
             return redirect()->route('liste_eleves')->with('success', 'Élève supprimé avec succès.');
         } catch (\Exception $e) {
