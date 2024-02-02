@@ -50,11 +50,12 @@
                                         <label class="form-check-label text-muted">
                                             <input type="checkbox" class="form-check-input" name="remenber" id="remenber">
                                             Se souvenir de moi
-                                        </label> 
+                                        </label>
                                     </div>
                                     <a href="{{ url('mot-de-passe-oublie')}}" class="auth-link text-black">Mot de passe oublié ?</a>
                                 </div>
-                            @includeIf('_messages')
+
+                                @includeIf('messages')
 
 
                                 <div class="text-center mt-4 font-weight-light">

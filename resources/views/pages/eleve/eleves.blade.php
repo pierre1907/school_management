@@ -16,27 +16,36 @@
     <div class="card">
         <div class="col-lg-12 grid-margin stretch-card">
             <div class="card-body">
+                @include('messages')
                 <div class="table-responsive">
                     <table class="table table-striped">
                         <thead>
                             <tr>
                                 <th></th>
-                                <th>Nom</th>
-                                <th>Prénom(s)</th>
+                                <th>Nom complet</th>
                                 <th>Date de naissance</th>
-                                <th>Classe</th>
+                                <th>Lieu de naissance</th>
+                                <th>Nationnalité</th>
+                                <th>Niveau</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($eleves as $eleve)
                             <tr>
                                 <td class="py-1">
-                                    <img src="{{ $eleve->photo }}" alt="image">
+                                    <img src="{{ asset($eleve->photo) }}" alt="image">
                                 </td>
-                                <td>{{ $eleve->nom }}</td>
-                                <td>{{ $eleve->prenom }}</td>
-                                <td>{{ $eleve->date_naissance }}</td>
-                                <td>{{ $eleve->classe }}</td>
+                                <td>{{ $eleve->nomComplet }}</td>
+                                <td>{{ \Carbon\Carbon::parse($eleve->date_naissance)->format('d-m-Y') }}</td>
+                                <td>{{ $eleve->lieu_naissance }}</td>
+                                <td>{{ $eleve->nationalite }}</td>
+                                <td>{{ $eleve->niveau }}</td>
+                                <td>
+                                    <!-- Action Edit -->
+                                    <a href="{{ route('edit_eleve', ['id' => $eleve->id]) }}" class="btn btn-warning btn-sm"><i class="mdi mdi-pencil"></i></a>
+                                    <a href="{{ route('liste_eleves') }}"  class="btn btn-danger btn-sm" onclick="confirmDelete('{{ route('eleve_delete', ['id' => $eleve->id]) }}')"><i class="mdi mdi-delete"></i></a>
+                                </td>
                             </tr>
                             @endforeach
                         </tbody>
@@ -47,19 +56,30 @@
     </div>
 </div>
 
-<!-- Import Vue.js -->
-{{-- <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
-
 <script>
-    new Vue({
-        el: '#app',
-        data: {
-            eleves: [
-                { nom: 'Herman', prenom: 'Beck', date_naissance: '15 Mai, 2015', classe: 'Maths', image: '../../images/faces/face1.jpg' },
-                { nom: 'Messsy', prenom: 'Adam', date_naissance: '1 Juillet, 2015', classe: 'Français', image: '../../images/faces/face2.jpg' },
-                // Ajoutez plus d'élèves ici...
-            ]
+    function confirmDelete(deleteUrl) {
+        if (confirm('Voulez-vous vraiment supprimer cet élève ?')) {
+            // Créez une requête DELETE avec Fetch API
+            fetch(deleteUrl, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erreur lors de la suppression');
+                }
+                // Redirigez ou mettez à jour la page après la suppression
+                // window.location.reload(); // ou autre action
+            })
+            .catch(error => {
+                console.error('Erreur:', error.message);
+            });
         }
-    });
-</script> --}}
+    }
+</script>
+
 @endsection
