@@ -20,9 +20,14 @@
     </div>
 @endif
 
-@if (isset($error))
-    <div class="alert alert-danger">
-        {{ $error }}
+@if (session('warning'))
+    <div class="alert alert-warning">
+        {{ session('warning') }}
     </div>
 @endif
 
+@if (session('info'))
+    <div class="alert alert-info">
+        {{ session('info') }}
+    </div>
+@endif

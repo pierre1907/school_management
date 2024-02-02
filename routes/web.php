@@ -47,6 +47,10 @@ Route::prefix('admin')->group(function () {
 Route::get('/eleves', [EleveController::class, 'liste_eleves'])->name('liste_eleves');
 Route::get('/eleves/ajouter', [EleveController::class, 'ajoutElevesForm'])->name('ajout_eleve');
 Route::post('/eleves/ajouter', [EleveController::class, 'ajoutEleves'])->name('ajouter_eleve');
+Route::get('/eleves/modifier/{id}', [EleveController::class, 'editElevesForm'])->name('edit_eleve');
+Route::put('/eleves/modifier/{id}', [EleveController::class, 'modifier'])->name('eleves_modifier');
+Route::delete('/eleves/supprimer/{id}', [EleveController::class, 'delete'])->name('eleve_delete');
+
 
 // Route::get('/eleves/ajouter', [EleveController::class, 'ajouter'])->name('eleves.ajouter');
     // Route::get('/eleves/modifier/{id}', [EleveController::class, 'modifier'])->name('eleves.modifier');

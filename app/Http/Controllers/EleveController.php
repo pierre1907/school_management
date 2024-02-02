@@ -13,65 +13,102 @@ class EleveController extends Controller
     public function liste_eleves()
     {
         $header_title = "Liste des élèves";
-        $eleves = Eleve::all(); // Récupération de tous les élèves depuis la base de données
-        return view('pages.eleve.eleves', compact('header_title', 'eleves'));
-    }
-    // public function liste_eleves(){
-    //     $header_title = "Liste des élèves";
-    //     return view('pages.eleve.eleves')->with('header_title', $header_title);
-    // }
+        $eleves = Eleve::all();
 
-     // Afficher le formulaire d'ajout d'élève
+        return view('pages.eleve.eleves', ['header_title' => $header_title, 'eleves' => $eleves]);
+    }
+
     public function ajoutElevesForm()
     {
         $countries = ['Nigeria', 'Ghana', 'Sénégal', 'Mali', 'Côte d\'Ivoire', 'Burkina Faso', 'Niger', 'Togo', 'Bénin', 'Liberia'];
         $levels = ['Licence 1', 'Licence 2', 'Licence 2', 'Master 1', 'Master 2'];
-
-
         return view('pages.eleve.ajoutEleve', compact('countries', 'levels'));
     }
 
-     // Traitement du formulaire d'ajout d'élève
-     public function ajoutEleves(Request $request)
+      public function ajoutEleves(Request $request)
      {
-         // Validation des données
-         $request->validate([
-             'nom' => 'required|string|max:255',
-             'genre' => 'required|in:homme,femme',
-             'date_naissance' => 'required|date',
-             'lieu_naissance' => 'required|string|max:255',
-             'nationalite' => 'required|string|in:Nigeria,Ghana,Sénégal,Mali,Côte d\'Ivoire,Burkina Faso,Niger,Togo,Bénin,Liberia',
-             'niveau' => 'required|string|in:Licence 1,Licence 2,Licence 3, MBA 1, MBA 2',
-             'photo' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
-         ]);
-
-         try {
-             // Enregistrement d'un nouvel élève
-             $eleve = new Eleve();
-             $eleve->nom = $request->input('nom');
-             $eleve->genre = $request->input('genre');
-             $eleve->date_naissance = $request->input('date_naissance');
-             $eleve->lieu_naissance = $request->input('lieu_naissance');
-             $eleve->nationalite = $request->input('nationalite');
-             $eleve->classe = $request->input('classe');
-             $eleve->niveau = $request->input('niveau');
+        try {
+             $eleve = new Eleve;
+            $eleve->nomComplet = trim($request->nomComplet);
+            $eleve->genre = trim($request->genre);
+            $eleve->date_naissance = trim($request->date_naissance);
+            $eleve->lieu_naissance = trim($request->lieu_naissance);
+            $eleve->nationalite = trim($request->nationalite);
+            $eleve->niveau = trim($request->niveau);
+            $eleve->user_type = "eleve";
+            if ($request->hasFile('photo')) {
+                $imagePath = $request->file('photo')->store('photos', 'public');
+                $eleve->photo = 'public/storage/' . $imagePath;
+            }
+            $eleve->save();
+            return redirect()->route('liste_eleves')->with('success', 'Élève ajouté avec succès.');
+        } catch (\Exception $e) {
+            return redirect()->back()->withInput()->withErrors(['error' => 'Une erreur est survenue lors de l\'ajout de l\'élève. Veuillez réessayer.']);
+        }
+    }
 
 
-             if ($request->hasFile('photo')) {
-                 $imagePath = $request->file('photo')->store('photos', 'public');
-                 $eleve->photo = $imagePath;
-             }
-             dd($eleve);
+    //edit
+    public function editElevesForm($id)
+    {
+        $eleve = Eleve::find($id);
 
-             $eleve->save();
+        $countries = ['Nigeria', 'Ghana', 'Sénégal', 'Mali', 'Côte d\'Ivoire', 'Burkina Faso', 'Niger', 'Togo', 'Bénin', 'Liberia'];
+        $levels = ['Licence 1', 'Licence 2', 'Licence 2', 'Master 1', 'Master 2'];
+        return view('pages.eleve.editEleve', compact('countries', 'levels', 'eleve'));
+    }
 
-             // Redirection vers la liste des élèves après l'ajout
-             return redirect()->route('liste_eleves')->with('success', 'Élève ajouté avec succès.');
-         } catch (\Exception $e) {
-             // Gestion des erreurs
-             dd($e);
-             return redirect()->back()->withInput()->withErrors(['error' => 'Une erreur est survenue lors de l\'ajout de l\'élève. Veuillez réessayer.']);
-         }
-     }
+
+    public function modifier(Request $request, $id)
+    {
+        try {
+            // Trouver l'élève à mettre à jour
+            $eleve = Eleve::find($id);
+
+            // Vérifier si l'élève existe
+            if (!$eleve) {
+                return redirect()->back()->withInput()->withErrors(['error' => 'Élève non trouvé']);
+            }
+
+            // Mettre à jour les propriétés de l'élève
+            $eleve->nomComplet = trim($request->nomComplet);
+            $eleve->genre = trim($request->genre);
+            $eleve->date_naissance = trim($request->date_naissance);
+            $eleve->lieu_naissance = trim($request->lieu_naissance);
+            $eleve->nationalite = trim($request->nationalite);
+            $eleve->niveau = trim($request->niveau);
+
+            // Mettre à jour la photo si une nouvelle photo est fournie
+            if ($request->hasFile('photo')) {
+                $imagePath = $request->file('photo')->store('photos', 'public');
+                $eleve->photo = 'public/storage/' . $imagePath;
+            }
+
+            // Sauvegarder les modifications
+            $eleve->save();
+
+            return redirect()->route('liste_eleves')->with('success', 'Élève modifié avec succès.');
+        } catch (\Exception $e) {
+            return redirect()->back()->withInput()->withErrors(['error' => 'Une erreur est survenue lors de la modification de l\'élève. Veuillez réessayer.']);
+        }
+    }
+
+
+    //delete
+    public function delete($id)
+    {
+        try {
+            // Trouver l'élève par son ID
+            $eleve = Eleve::findOrFail($id);
+
+            // Supprimer l'élève
+            $eleve->delete();
+
+            return redirect()->route('liste_eleves')->with('success', 'Élève supprimé avec succès.');
+        } catch (\Exception $e) {
+            // En cas d'erreur, rediriger avec un message d'erreur
+            return redirect()->route('liste_eleves')->with('error', 'Une erreur est survenue lors de la suppression de l\'élève. Veuillez réessayer.');
+        }
+    }
 
 }

@@ -12,7 +12,7 @@ class Eleve extends Model
     protected $table = 'eleves';
 
     protected $fillable = [
-        'nonComplet',
+        'nomComplet',
         'genre',
         'date_naissance',
         'lieu_naissance',
@@ -20,5 +20,6 @@ class Eleve extends Model
         //'classe',
         'niveau',
         'photo',
+        'user_type',
     ];
 }

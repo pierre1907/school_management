@@ -22,12 +22,13 @@
         </div>
       </li> --}}
 
-    <li class="nav-item {{ request()->is('eleves*') ? 'active' : '' }}">
+      <li class="nav-item {{ request()->is('eleves*') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('liste_eleves') }}">
             <i class="mdi mdi-account-multiple"></i>
             <span class="menu-title">Élèves</span>
         </a>
-     </li>
+    </li>
+
 
       <li li class="nav-item">
         <a class="nav-link" href="{{ url('/enseignants') }}">
