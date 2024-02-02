@@ -110,4 +110,11 @@ class EleveController extends Controller
         }
     }
 
+    //voir
+    public function details($id)
+    {
+        $eleve = Eleve::getEleve($id);
+        return view('pages.eleve.showEleve', ['eleve' => $eleve]);
+    }
+
 }

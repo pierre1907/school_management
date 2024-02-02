@@ -50,6 +50,8 @@ Route::post('/eleves/ajouter', [EleveController::class, 'ajoutEleves'])->name('a
 Route::get('/eleves/modifier/{id}', [EleveController::class, 'editElevesForm'])->name('edit_eleve');
 Route::put('/eleves/modifier/{id}', [EleveController::class, 'modifier'])->name('eleves_modifier');
 Route::get('/eleves/supprimer/{id}', [EleveController::class, 'delete'])->name('eleve_delete');
+Route::get('/eleves/details/{id}', [EleveController::class, 'details'])->name('eleve_voir');
+
 
 
 // Route::get('/eleves/ajouter', [EleveController::class, 'ajouter'])->name('eleves.ajouter');

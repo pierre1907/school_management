@@ -42,6 +42,7 @@
                                 <td>{{ $eleve->nationalite }}</td>
                                 <td>{{ $eleve->niveau }}</td>
                                 <td>
+                                    <a href="{{ route('eleve_voir', ['id' => $eleve->id]) }}" class="btn btn-info btn-sm"><i class="mdi mdi-eye"></i></a>
                                     <!-- Action Edit -->
                                     <a href="{{ route('edit_eleve', ['id' => $eleve->id]) }}" class="btn btn-warning btn-sm"><i class="mdi mdi-pencil"></i></a>
                                     {{-- <a href="{{ route('liste_eleves') }}"  class="btn btn-danger btn-sm" onclick="confirmDelete('{{ route('eleve_delete', ['id' => $eleve->id]) }}')"><i class="mdi mdi-delete"></i></a> --}}
